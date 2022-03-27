@@ -25,10 +25,11 @@ public class Main extends Application {
     private int score = 0;
     private int beginHealth = 20;
     private int frequency = 5000;
-    private long nextFase = System.currentTimeMillis() + 20000;
+    private long nextPhase = System.currentTimeMillis() + 20000;
     private long delay = System.currentTimeMillis() + frequency;
     private List<Asteroid> asteroidList;
     private BufferedImage asteroidImage;
+    public static Random RANDOM = new Random();
 
     public static void main(String[] args) {
         launch(Main.class);
@@ -66,12 +67,12 @@ public class Main extends Application {
     }
 
     private void update(double deltaTime) {
-        nextFase(System.currentTimeMillis());
-        player.update(deltaTime, this.scene);
+        nextPhase(System.currentTimeMillis());
+        this.player.update(deltaTime, this.scene);
 
         if (System.currentTimeMillis() >= this.delay) {
             this.delay = System.currentTimeMillis() + frequency;
-            asteroidList.add(new Asteroid(new Point2D.Double((new Random().nextInt(7) * 100), 0),
+            this.asteroidList.add(new Asteroid(new Point2D.Double((RANDOM.nextInt(7) * 100), 0),
                     this.asteroidImage, this.beginHealth, 1));
         }
 
@@ -87,10 +88,10 @@ public class Main extends Application {
 
                 if (asteroid.getHealth() <= 0) {
                     toRemove.add(asteroid);
-                    score += 100;
+                    this.score += 100;
                 }
             }
-            asteroidList.removeAll(toRemove);
+            this.asteroidList.removeAll(toRemove);
         }
     }
 
@@ -111,7 +112,7 @@ public class Main extends Application {
         graphics.setFont(new Font("Arial", Font.PLAIN, 20));
         graphics.drawString("Score: " + this.score, 670, 30);
 
-        player.draw(graphics);
+        this.player.draw(graphics);
 
         if (!asteroidList.isEmpty()) {
             for (Asteroid asteroid : asteroidList) {
@@ -123,15 +124,14 @@ public class Main extends Application {
 
     /**
      * Every 20 seconds a new fase of the game starts to make it harder.
-     *
      * @param millis gives the amount of milliseconds the computer is running, it's constantly updated.
      */
-    private void nextFase(long millis) {
-        if (millis >= nextFase) {
+    private void nextPhase(long millis) {
+        if (millis >= nextPhase) {
             this.score += 1000;
-            nextFase = System.currentTimeMillis() + 20000;
-            if (frequency != 2000) {
-                frequency -= 500;
+            this.nextPhase = System.currentTimeMillis() + 20000;
+            if (this.frequency != 2000) {
+                this.frequency -= 500;
             }
             this.beginHealth += 5;
         }

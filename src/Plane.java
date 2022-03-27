@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 public class Plane {
     private BufferedImage[] particles;
@@ -55,8 +54,8 @@ public class Plane {
             }
         }
 
-        particleList.add(new Particle(new Point2D.Double(this.position.getX() + 45, this.position.getY() + 120),
-                this.particles[new Random().nextInt(3)]));
+        this.particleList.add(new Particle(new Point2D.Double(this.position.getX() + 45, this.position.getY() + 120),
+                this.particles[Main.RANDOM.nextInt(3)]));
 
         List<Particle> toRemoveParticles = new ArrayList<>();
         for (Particle particle : particleList) {
@@ -108,15 +107,11 @@ public class Plane {
         graphics.drawImage(this.playerImage, tx, null);
 
         if (!bulletList.isEmpty()) {
-            for (Bullet bullet : bulletList) {
-                bullet.draw(graphics);
-            }
+            this.bulletList.forEach(bullet -> bullet.draw(graphics));
         }
 
         if (!particleList.isEmpty()) {
-            for (Particle particle : particleList) {
-                particle.draw(graphics);
-            }
+            this.particleList.forEach(particle -> particle.draw(graphics));
         }
     }
 }

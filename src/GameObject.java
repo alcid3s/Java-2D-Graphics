@@ -4,11 +4,11 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
-public abstract class Structure {
+public abstract class GameObject {
     private Point2D position;
     private BufferedImage image;
 
-    public Structure(Point2D position, BufferedImage image) {
+    public GameObject(Point2D position, BufferedImage image) {
         this.position = position;
         this.image = image;
     }

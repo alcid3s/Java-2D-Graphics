@@ -1,14 +1,14 @@
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
-public class HealthBar extends Structure {
+public class HealthBar extends GameObject {
     private final int gravity;
     private int currentHealth;
     private final int startHealth;
     private final BufferedImage[] visualHealth;
 
-    public HealthBar(Point2D position, BufferedImage image, int gravity, int health, BufferedImage[] visualHealth) {
-        super(position, image);
+    public HealthBar(Point2D position, int gravity, int health, BufferedImage[] visualHealth) {
+        super(position, visualHealth[0]);
         this.gravity = gravity;
         this.currentHealth = health;
         this.startHealth = health;
