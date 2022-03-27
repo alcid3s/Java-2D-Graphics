@@ -1,0 +1,139 @@
+import javafx.animation.AnimationTimer;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import org.jfree.fx.FXGraphics2D;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+
+public class Main extends Application {
+    private BufferedImage playerImage;
+    private Plane player;
+    private FXGraphics2D g2d;
+    private Scene scene;
+
+    private int score = 0;
+    private int beginHealth = 20;
+    private int frequency = 5000;
+    private long nextFase = System.currentTimeMillis() + 20000;
+    private long delay = System.currentTimeMillis() + frequency;
+    private List<Asteroid> asteroidList;
+    private BufferedImage asteroidImage;
+
+    public static void main(String[] args) {
+        launch(Main.class);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        BorderPane mainPane = new BorderPane();
+        Canvas canvas = new Canvas(800, 600);
+        this.g2d = new FXGraphics2D(canvas.getGraphicsContext2D());
+        mainPane.setCenter(canvas);
+        this.scene = new Scene(mainPane);
+        this.player = new Plane(new Point2D.Double(canvas.getWidth() / 2, canvas.getHeight() - 200), this.playerImage);
+        this.asteroidList = new ArrayList<>();
+
+        new AnimationTimer() {
+            long last = -1;
+
+            @Override
+            public void handle(long now) {
+                if (last == -1)
+                    last = now;
+                update((now - last) / 1000000000.0);
+                last = now;
+                draw(g2d);
+            }
+        }.start();
+
+        draw(g2d);
+
+        primaryStage.setResizable(false);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Space invaders");
+        primaryStage.show();
+    }
+
+    private void update(double deltaTime) {
+        nextFase(System.currentTimeMillis());
+        player.update(deltaTime, this.scene);
+
+        if (System.currentTimeMillis() >= this.delay) {
+            this.delay = System.currentTimeMillis() + frequency;
+            asteroidList.add(new Asteroid(new Point2D.Double((new Random().nextInt(7) * 100), 0),
+                    this.asteroidImage, this.beginHealth, 1));
+        }
+
+        if (!asteroidList.isEmpty()) {
+
+            /* If the asteroid is dead, it should be removed. If done in the for-loop it'll give an ConcurrentModificationException,
+              therefore a list can keep all items that should be removed. And after the for-loop all items in that list will be removed.
+             */
+            List<Asteroid> toRemove = new ArrayList<>();
+            for (Asteroid asteroid : asteroidList) {
+                asteroid.update(deltaTime);
+                this.player.setBulletList(asteroid.isHit(this.player.getBulletList()));
+
+                if (asteroid.getHealth() <= 0) {
+                    toRemove.add(asteroid);
+                    score += 100;
+                }
+            }
+            asteroidList.removeAll(toRemove);
+        }
+    }
+
+    public void init() {
+        try {
+            this.playerImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("fighter.png")));
+            this.asteroidImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("asteroid.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void draw(FXGraphics2D graphics) {
+        graphics.clearRect(0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
+        graphics.setBackground(Color.black);
+
+        graphics.setColor(Color.GREEN);
+        graphics.setFont(new Font("Arial", Font.PLAIN, 20));
+        graphics.drawString("Score: " + this.score, 670, 30);
+
+        player.draw(graphics);
+
+        if (!asteroidList.isEmpty()) {
+            for (Asteroid asteroid : asteroidList) {
+                asteroid.draw(graphics);
+                asteroid.getHealthBar().draw(graphics);
+            }
+        }
+    }
+
+    /**
+     * Every 20 seconds a new fase of the game starts to make it harder.
+     *
+     * @param millis gives the amount of milliseconds the computer is running, it's constantly updated.
+     */
+    private void nextFase(long millis) {
+        if (millis >= nextFase) {
+            this.score += 1000;
+            nextFase = System.currentTimeMillis() + 20000;
+            if (frequency != 2000) {
+                frequency -= 500;
+            }
+            this.beginHealth += 5;
+        }
+    }
+}
