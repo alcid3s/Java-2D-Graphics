@@ -28,6 +28,7 @@ public class Main extends Application {
     private long nextPhase = System.currentTimeMillis() + 20000;
     private long delay = System.currentTimeMillis() + frequency;
     private List<Asteroid> asteroidList;
+    private List<PowerUp> dropPowerupsList = new ArrayList<>();
     private BufferedImage asteroidImage;
     public static Random RANDOM = new Random();
 
@@ -72,9 +73,10 @@ public class Main extends Application {
 
         if (System.currentTimeMillis() >= this.delay) {
             this.delay = System.currentTimeMillis() + frequency;
-            this.asteroidList.add(new Asteroid(new Point2D.Double((RANDOM.nextInt(7) * 100), 0),
+            this.asteroidList.add(new Asteroid(new Point2D.Double((Main.RANDOM.nextInt(7) * 100), 0),
                     this.asteroidImage, this.beginHealth, 1));
         }
+
 
         if (!asteroidList.isEmpty()) {
 
@@ -85,14 +87,38 @@ public class Main extends Application {
             for (Asteroid asteroid : asteroidList) {
                 asteroid.update(deltaTime);
                 this.player.setBulletList(asteroid.isHit(this.player.getBulletList()));
+                this.player.setWarHeadList(asteroid.isHitByWarHead(this.player.getWarHeadList()));
 
                 if (asteroid.getHealth() <= 0) {
+                    if(!asteroid.getPowerUpsList().isEmpty()) {
+                        this.dropPowerupsList = asteroid.getPowerUpsList();
+                    }
                     toRemove.add(asteroid);
                     this.score += 100;
                 }
             }
             this.asteroidList.removeAll(toRemove);
         }
+
+        if(!this.dropPowerupsList.isEmpty()){
+            this.dropPowerupsList.forEach(powerUp -> powerUp.update(deltaTime));
+        }
+
+        List<PowerUp> toRemovePowerUp = new ArrayList<>();
+        List<PowerUp> pickedUp = new ArrayList<>();
+        for (PowerUp powerUp : dropPowerupsList) {
+            if(powerUp.getPosition().getX() >= this.player.getPosition().getX() && powerUp.getPosition().getX() <= this.player.getPosition().getX() + 100){
+                if(powerUp.getPosition().getY() >= this.player.getPosition().getY() && powerUp.getPosition().getY() <= 630){
+                    toRemovePowerUp.add(powerUp);
+                    pickedUp.add(powerUp);
+                }
+            }
+        }
+
+        List<PowerUp> temp = this.player.getPowerUpList();
+        temp.addAll(pickedUp);
+        this.player.setPowerUpList(temp);
+        this.dropPowerupsList.removeAll(toRemovePowerUp);
     }
 
     public void init() {
@@ -106,13 +132,17 @@ public class Main extends Application {
 
     private void draw(FXGraphics2D graphics) {
         graphics.clearRect(0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
-        graphics.setBackground(Color.black);
+        graphics.setBackground(Color.BLACK);
 
         graphics.setColor(Color.GREEN);
         graphics.setFont(new Font("Arial", Font.PLAIN, 20));
         graphics.drawString("Score: " + this.score, 670, 30);
 
         this.player.draw(graphics);
+
+        if(!this.dropPowerupsList.isEmpty()){
+            this.dropPowerupsList.forEach(powerUp -> powerUp.draw(graphics));
+        }
 
         if (!asteroidList.isEmpty()) {
             for (Asteroid asteroid : asteroidList) {
