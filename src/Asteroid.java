@@ -120,9 +120,9 @@ public class Asteroid extends GameObject {
 
     private void droppingPowerUp() {
         if(this.containsPowerUp.equals(PowerupEnum.AUTOTURRET)){
-            this.powerUpsList.add(new PowerUp(new Point2D.Double(getPosition().getX() + 50, getPosition().getY()), this.powerupImages[1], PowerupEnum.AUTOTURRET));
+            this.powerUpsList.add(new PowerUp(new Point2D.Double(getPosition().getX() + 35, getPosition().getY()), this.powerupImages[1], PowerupEnum.AUTOTURRET));
         }else if(this.containsPowerUp.equals(PowerupEnum.ROCKET)){
-            this.powerUpsList.add(new PowerUp(getPosition(), this.powerupImages[0], PowerupEnum.ROCKET));
+            this.powerUpsList.add(new PowerUp(new Point2D.Double(getPosition().getX() + 35, getPosition().getY()), this.powerupImages[0], PowerupEnum.ROCKET));
         }
     }
 }
