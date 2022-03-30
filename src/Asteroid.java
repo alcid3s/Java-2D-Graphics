@@ -63,6 +63,7 @@ public class Asteroid extends GameObject {
 
         // If the asteroid hits the floor it's game over.
         if (getPosition().getY() + 100 >= 600) {
+            System.out.println();
             Platform.exit();
         }
     }

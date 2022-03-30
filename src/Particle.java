@@ -1,6 +1,5 @@
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.util.Random;
 
 public class Particle extends GameObject {
     private final boolean forExplosion;
