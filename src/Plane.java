@@ -139,7 +139,7 @@ public class Plane {
                 case E:
                     if (!this.powerUpList.isEmpty()) {
                         for (int i = 0; i < this.powerUpList.size(); i++) {
-                            if(this.powerUpList.get(i).getType().equals(PowerupEnum.ROCKET)){
+                            if (this.powerUpList.get(i).getType().equals(PowerupEnum.ROCKET)) {
                                 this.warHeadList.add(new WarHead(new Point2D.Double(this.position.getX() + 35, this.position.getY()), this.warHeadImage));
                                 this.powerUpList.remove(this.powerUpList.get(i));
                                 i = this.powerUpList.size() + 10;
@@ -159,6 +159,20 @@ public class Plane {
                             }
                         }
                     }
+                    break;
+                /*
+                 * Commented code used for debugging for powerup list.
+                 */
+//                case T:
+//                    if (this.powerUpList.isEmpty()) {
+//                        System.out.println("List is empty");
+//                    } else {
+//                        System.out.println("List with powerups: ");
+//                        this.powerUpList.forEach(powerUp -> {
+//                            System.out.println(powerUp.toString());
+//                        });
+//                    }
+//                    break;
             }
         });
     }

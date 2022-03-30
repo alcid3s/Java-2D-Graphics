@@ -17,4 +17,9 @@ public class PowerUp extends GameObject{
     public PowerupEnum getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "Type: " + type;
+    }
 }

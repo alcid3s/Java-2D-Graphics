@@ -16,6 +16,9 @@ public class Asteroid extends GameObject {
     private final BufferedImage[] powerupImages = new BufferedImage[2];
     private final List<PowerUp> powerUpsList = new ArrayList<>();
 
+    private boolean flagForWarHead = false;
+    private boolean flagForBullet = false;
+
     public Asteroid(Point2D position, BufferedImage image, int health, int gravity) {
         super(position, image);
         this.currentHealth = health;
@@ -72,10 +75,13 @@ public class Asteroid extends GameObject {
                     warHead.hit();
 
                     if(this.currentHealth <= 0) {
-                        droppingPowerUp();
+                        flagForWarHead = true;
                     }
                 }
             }
+        }
+        if(flagForWarHead){
+            droppingPowerUp();
         }
         return warHeadList;
     }
@@ -89,10 +95,13 @@ public class Asteroid extends GameObject {
                     bullet.hit();
 
                     if(this.currentHealth <= 0) {
-                        droppingPowerUp();
+                        flagForBullet = true;
                     }
                 }
             }
+        }
+        if(flagForBullet){
+            droppingPowerUp();
         }
         return bulletList;
     }
@@ -111,7 +120,7 @@ public class Asteroid extends GameObject {
 
     private void droppingPowerUp() {
         if(this.containsPowerUp.equals(PowerupEnum.AUTOTURRET)){
-            this.powerUpsList.add(new PowerUp(new Point2D.Double(getPosition().getX(), getPosition().getY()), this.powerupImages[1], PowerupEnum.AUTOTURRET));
+            this.powerUpsList.add(new PowerUp(new Point2D.Double(getPosition().getX() + 50, getPosition().getY()), this.powerupImages[1], PowerupEnum.AUTOTURRET));
         }else if(this.containsPowerUp.equals(PowerupEnum.ROCKET)){
             this.powerUpsList.add(new PowerUp(getPosition(), this.powerupImages[0], PowerupEnum.ROCKET));
         }

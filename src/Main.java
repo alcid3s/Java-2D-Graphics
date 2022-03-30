@@ -100,12 +100,15 @@ public class Main extends Application {
             this.asteroidList.removeAll(toRemove);
         }
 
+        // For power ups dropping down
         if(!this.dropPowerupsList.isEmpty()){
             this.dropPowerupsList.forEach(powerUp -> powerUp.update(deltaTime));
         }
 
         List<PowerUp> toRemovePowerUp = new ArrayList<>();
         List<PowerUp> pickedUp = new ArrayList<>();
+
+        // If the player flew against the powerup, the powerup should be added to the player and removed from the dropPowerupsList.
         for (PowerUp powerUp : dropPowerupsList) {
             if(powerUp.getPosition().getX() >= this.player.getPosition().getX() && powerUp.getPosition().getX() <= this.player.getPosition().getX() + 100){
                 if(powerUp.getPosition().getY() >= this.player.getPosition().getY() && powerUp.getPosition().getY() <= 630){
@@ -140,6 +143,7 @@ public class Main extends Application {
 
         this.player.draw(graphics);
 
+        // For powerups dropping down
         if(!this.dropPowerupsList.isEmpty()){
             this.dropPowerupsList.forEach(powerUp -> powerUp.draw(graphics));
         }
