@@ -35,22 +35,22 @@ public class Asteroid extends GameObject {
 
             temp = ImageIO.read(Objects.requireNonNull(getClass().getResource("powerups.png")));
             for (int i = 0; i < 2; i++) {
-                powerupImages[i] = temp.getSubimage(i * 30,  0, 30, 30);
+                powerupImages[i] = temp.getSubimage(i * 30, 0, 30, 30);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         this.healthBar = new HealthBar(new Point2D.Double(position.getX() + 10, position.getY() - 10), gravity, currentHealth, visualHealth);
 
-        if(Main.RANDOM.nextBoolean()){
-            if(Main.RANDOM.nextBoolean()){
+        if (Main.RANDOM.nextBoolean()) {
+            if (Main.RANDOM.nextBoolean()) {
                 System.out.println("Contains rocket");
-               this.containsPowerUp = PowerupEnum.ROCKET;
-            }else{
+                this.containsPowerUp = PowerupEnum.ROCKET;
+            } else {
                 System.out.println("Contains turret");
                 this.containsPowerUp = PowerupEnum.AUTOTURRET;
             }
-        }else{
+        } else {
             this.containsPowerUp = PowerupEnum.FALSE;
         }
     }
@@ -63,7 +63,6 @@ public class Asteroid extends GameObject {
 
         // If the asteroid hits the floor it's game over.
         if (getPosition().getY() + 100 >= 600) {
-            System.out.println();
             Platform.exit();
         }
     }
@@ -75,13 +74,13 @@ public class Asteroid extends GameObject {
                     this.currentHealth = 0;
                     warHead.hit();
 
-                    if(this.currentHealth <= 0) {
+                    if (this.currentHealth <= 0) {
                         flagForWarHead = true;
                     }
                 }
             }
         }
-        if(flagForWarHead){
+        if (flagForWarHead) {
             droppingPowerUp();
         }
         return warHeadList;
@@ -95,13 +94,13 @@ public class Asteroid extends GameObject {
                     this.currentHealth--;
                     bullet.hit();
 
-                    if(this.currentHealth <= 0) {
+                    if (this.currentHealth <= 0) {
                         flagForBullet = true;
                     }
                 }
             }
         }
-        if(flagForBullet){
+        if (flagForBullet) {
             droppingPowerUp();
         }
         return bulletList;
@@ -120,9 +119,9 @@ public class Asteroid extends GameObject {
     }
 
     private void droppingPowerUp() {
-        if(this.containsPowerUp.equals(PowerupEnum.AUTOTURRET)){
+        if (this.containsPowerUp.equals(PowerupEnum.AUTOTURRET)) {
             this.powerUpsList.add(new PowerUp(new Point2D.Double(getPosition().getX() + 35, getPosition().getY()), this.powerupImages[1], PowerupEnum.AUTOTURRET));
-        }else if(this.containsPowerUp.equals(PowerupEnum.ROCKET)){
+        } else if (this.containsPowerUp.equals(PowerupEnum.ROCKET)) {
             this.powerUpsList.add(new PowerUp(new Point2D.Double(getPosition().getX() + 35, getPosition().getY()), this.powerupImages[0], PowerupEnum.ROCKET));
         }
     }

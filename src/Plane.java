@@ -87,6 +87,7 @@ public class Plane {
                 particle.update(deltaTime);
             }
         }
+
         warHeadList.removeAll(toRemoveWarHead);
         bulletList.removeAll(toRemoveBullets);
         particleList.removeAll(toRemoveParticles);

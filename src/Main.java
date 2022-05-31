@@ -30,7 +30,7 @@ public class Main extends Application {
     private List<Asteroid> asteroidList;
     private List<PowerUp> dropPowerupsList = new ArrayList<>();
     private BufferedImage asteroidImage;
-    public static Random RANDOM = new Random();
+    public static final Random RANDOM = new Random();
 
     public static void main(String[] args) {
         launch(Main.class);
@@ -90,7 +90,7 @@ public class Main extends Application {
                 this.player.setWarHeadList(asteroid.isHitByWarHead(this.player.getWarHeadList()));
 
                 if (asteroid.getHealth() <= 0) {
-                    if(!asteroid.getPowerUpsList().isEmpty()) {
+                    if (!asteroid.getPowerUpsList().isEmpty()) {
                         this.dropPowerupsList = asteroid.getPowerUpsList();
                     }
                     toRemove.add(asteroid);
@@ -101,7 +101,7 @@ public class Main extends Application {
         }
 
         // For power ups dropping down
-        if(!this.dropPowerupsList.isEmpty()){
+        if (!this.dropPowerupsList.isEmpty()) {
             this.dropPowerupsList.forEach(powerUp -> powerUp.update(deltaTime));
         }
 
@@ -110,8 +110,8 @@ public class Main extends Application {
 
         // If the player flew against the powerup, the powerup should be added to the player and removed from the dropPowerupsList.
         for (PowerUp powerUp : dropPowerupsList) {
-            if(powerUp.getPosition().getX() >= this.player.getPosition().getX() && powerUp.getPosition().getX() <= this.player.getPosition().getX() + 100){
-                if(powerUp.getPosition().getY() >= this.player.getPosition().getY() && powerUp.getPosition().getY() <= 630){
+            if (powerUp.getPosition().getX() >= this.player.getPosition().getX() && powerUp.getPosition().getX() <= this.player.getPosition().getX() + 100) {
+                if (powerUp.getPosition().getY() >= this.player.getPosition().getY() && powerUp.getPosition().getY() <= 630) {
                     toRemovePowerUp.add(powerUp);
                     pickedUp.add(powerUp);
                 }
@@ -144,7 +144,7 @@ public class Main extends Application {
         this.player.draw(graphics);
 
         // For powerups dropping down
-        if(!this.dropPowerupsList.isEmpty()){
+        if (!this.dropPowerupsList.isEmpty()) {
             this.dropPowerupsList.forEach(powerUp -> powerUp.draw(graphics));
         }
 
@@ -158,6 +158,7 @@ public class Main extends Application {
 
     /**
      * Every 20 seconds a new fase of the game starts to make it harder.
+     *
      * @param millis gives the amount of milliseconds the computer is running, it's constantly updated.
      */
     private void nextPhase(long millis) {
